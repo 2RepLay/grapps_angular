@@ -1,0 +1,44 @@
+<md-list>
+  <md-card *ngFor="let dir of directories; let i = index">
+    <i class="material-icons">folder</i>
+
+    <md-checkbox [(ngModel)]="dir.checked"></md-checkbox>
+
+    <span md-line *ngIf="!dir.isEditing" (click)="dir.toggle()">{{ dir.name }}</span>
+
+    <md-input-container class="example-full-width" *ngIf="dir.isEditing">
+      <input mdInput placeholder="Title" type="text" [(ngModel)]="dir.name">
+    </md-input-container>
+
+    <button md-button (click)="addFolder(dir)">+ add folder</button>
+    <button md-button (click)="addFile(dir)">+ add file</button>
+    <button md-button (click)="removeDirectory(i)" *ngIf="dir.isEditable">- remove</button>
+
+    <button md-button *ngIf="!dir.isEditing && dir.isEditable" (click)="dir.edit()">edit</button>
+    <button md-button *ngIf=" dir.isEditing && dir.isEditable" (click)="dir.save()">save</button>
+
+    <div *ngIf="dir.expanded" md-line>
+      <md-list>
+        <md-list-item *ngFor="let file of dir.files; let j = index" style="margin: 8px">
+         <i class="material-icons">insert_drive_file</i>
+
+          <md-checkbox [(ngModel)]="file.checked" (change)="onChange(file)"></md-checkbox>
+
+          <span *ngIf="!file.isEditing" (click)="showFileContent(file)">{{ file.name }}</span>
+          <md-input-container class="example-full-width" *ngIf="file.isEditing">
+            <input mdInput placeholder="Title" type="text" [(ngModel)]="file.name">
+          </md-input-container>
+
+          <button md-button (click)="removeFile(dir, j)" *ngIf="file.isEditable">- remove</button>
+
+          <button md-button *ngIf="!file.isEditing && file.isEditable" (click)="file.edit()">edit</button>
+          <button md-button *ngIf=" file.isEditing && file.isEditable" (click)="file.save()">save</button>
+        </md-list-item>
+
+      </md-list>
+
+      <app-tree-view [init]="dir.directories"></app-tree-view>
+
+    </div>
+  </md-card>
+</md-list>
